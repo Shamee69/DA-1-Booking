@@ -1,8 +1,8 @@
 #Импорт библиотеки pandas как pd
 import pandas as pd
 
-#Загрузите датасет bookings.csv с разделителем ;
-file_path = r'C:\Users\tvoya\Desktop\Python\Python Projects\CSV\bookings.csv'
+#Загрузите датасет bookings.csv с разделителем
+file_path = r'C:\Users\M\Desktop\Python\Python_Projects\CSV\bookings.csv'
 booking = pd.read_csv(file_path, sep = ';')
 
 #Приведите названия колонок к нижнему регистру и замените пробелы на знак нижнего подчеркивания
@@ -10,16 +10,13 @@ booking.columns = booking.columns.str.lower().str.replace(' ', '_')
 
 #Проверьте размер таблицы
 rows, columns = booking.shape
-# print(f'В таблице Bookings {columns} столбцов и  {rows} строк.')
+print(f'В таблице Bookings {columns} столбцов и  {rows} строк.')
 
 #Проверьте типы переменных
 types = booking.dtypes
 
 #выведите первые 7 строк, чтобы посмотреть на данные
 rows_7 = booking.head(7)
-
-# Вывести DataFrame с обновленными названиями колонок
-#print(Types)
 
 #Пользователи из каких стран совершили наибольшее число успешных бронирований? Укажите топ-5.
 top_5_country = booking.query('is_canceled == 0') \
@@ -34,13 +31,14 @@ top_5_country_2 = booking.loc[booking.is_canceled == 0].country.value_counts().h
 #На сколько ночей (stays_total_nights)  в среднем бронируют отели типа City Hotel? Resort Hotel?
 # Запишите полученные значения в пропуски с точностью до 2 знаков после точки.
 stays_mean_nights_by_city_hotel, stays_mean_nights_by_resort_hotel  = round(booking.groupby(['hotel']).stays_total_nights.mean(), 2)
-#
-# print(f'Среднее число забронированных ночей в отелях типа city hotel: {round(stays_mean_nights_by_city_hotel,2)} 'f'. В resort hotel: {round(stays_mean_nights_by_resort_hotel, 2)}')
+print(f'Среднее число забронированных ночей в отелях типа city hotel: {round(stays_mean_nights_by_city_hotel,2)} 'f'. В resort hotel: {round(stays_mean_nights_by_resort_hotel, 2)}')
+
 
 #Иногда тип номера, полученного клиентом (assigned_room_type), отличается от изначально забронированного (reserved_room_type).
 # Такое может произойти, например, по причине овербукинга.
 room_type_checks = booking.query('assigned_room_type != reserved_room_type').shape[0]
 room_type_checks_2 = len(booking.loc[booking.assigned_room_type != booking.reserved_room_type])
+
 
 #Теперь проанализируйте даты запланированного прибытия (arrival_date_year).
 #На какой месяц чаще всего оформляли бронь в 2016 году? Изменился ли самый популярный месяц в 2017 году?
@@ -61,12 +59,7 @@ the_mean = booking[['adults', 'children', 'babies']].mean()
 booking['total_kids'] = booking.children + booking.babies
 bookin_kids = booking.groupby('hotel').agg({'total_kids' : 'mean'}).round(2)
 
-#Не все бронирования завершились успешно (is_canceled), поэтому можно посчитать, сколько клиентов было потеряно в процессе.
-# Иными словами, посчитать метрику под названием Churn Rate.
-
-
-#Не все бронирования завершились успешно (is_canceled), поэтому можно посчитать, сколько клиентов было потеряно в процессе.
-#Иными словами, посчитать метрику под названием Churn Rate.
+#Не все бронирования завершились успешно (is_canceled), поэтому можно посчитать, сколько клиентов было потеряно в процессе. Иными словами, посчитать метрику под названием Churn Rate.
 #Churn rate (отток, коэффициент оттока) – это процент подписчиков (например, на push-уведомления от сайта), которые отписались от канала коммуникации, отказались от услуг сервиса в течение определенного периода времени.
 #Иными словами, представляет собой отношение количества ушедших пользователей к общему количеству пользователей, выраженное в процентах.
 #В нашем случае Churn Rate - это процент клиентов, которые отменили бронирование. Давайте посмотрим, как эта метрика связана с наличием детей у клиентов!
